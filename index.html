@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS Pro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- ===== SIDEBAR ===== -->
+      <div class="col-md-2 sidebar p-3 vh-100 position-sticky top-0">
+        <div class="logo mb-4 d-flex align-items-center gap-2">
+          <i class="bi bi-bag-fill fs-3 text-purple"></i>
+          <span class="fw-bold text-white">POS SYSTEM</span>
+        </div>
+
+        <div class="menu-item active" onclick="showPage('vente', this)">
+          <i class="bi bi-cart"></i> Vente
+        </div>
+        <div class="menu-item" onclick="showPage('produits', this)">
+          <i class="bi bi-box"></i> Produits
+        </div>
+        <div class="menu-item" onclick="setMenuActive(this)">
+          <i class="bi bi-people"></i> Clients
+        </div>
+        <div class="menu-item" onclick="setMenuActive(this)">
+          <i class="bi bi-tags"></i> Catégories
+        </div>
+        <div class="menu-item" onclick="setMenuActive(this)">
+          <i class="bi bi-bar-chart"></i> Rapports
+        </div>
+        <div class="menu-item" onclick="setMenuActive(this)">
+          <i class="bi bi-clock-history"></i> Historique
+        </div>
+        <div class="menu-item" onclick="setMenuActive(this)">
+          <i class="bi bi-gear"></i> Paramètres
+        </div>
+      </div>
+
+
+      <div class="col-md-10 p-3">
+
+        <!-- Header -->
+        <div class="header d-flex justify-content-between align-items-center mb-3 shadow-sm">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-list fs-4" style="cursor:pointer;"></i>
+            <h5 class="m-0 fw-bold" id="page-title">Nouvelle Vente</h5>
+          </div>
+          <div class="d-flex align-items-center gap-3" id="search-wrap">
+            <div class="search-box d-flex align-items-center px-2">
+              <i class="bi bi-search text-muted me-2"></i>
+              <input type="text" placeholder="Rechercher..." onkeyup="searchProduct(this.value)">
+            </div>
+            <div class="icon-btn position-relative">
+              <i class="bi bi-bell"></i>
+              <span class="notif">3</span>
+            </div>
+            <button class="btn btn-purple">
+              <i class="bi bi-printer"></i> Imprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- ========== PAGE: VENTE ========== -->
+        <div id="page-vente">
+          <div class="row">
+            <div class="col-lg-8 menu-container">
+              <h3 class="mb-3 fw-bold">Menu</h3>
+
+
+              <div class="categories mb-3">
+                <button class="cat-btn active" onclick="setActive(this); filterCategory('all')">Tous</button>
+                <button class="cat-btn" onclick="setActive(this); filterCategory('drink')">Boissons</button>
+                <button class="cat-btn" onclick="setActive(this); filterCategory('food')">Snacks</button>
+                <button class="cat-btn" onclick="setActive(this); filterCategory('desserts')">Desserts</button>
+                <button class="cat-btn" onclick="setActive(this); filterCategory('plats')">Plats</button>
+                <button class="cat-btn" onclick="setActive(this); filterCategory('cafes')">Cafés</button>
+              </div>
+
+              <div class="menu-section">
+                <div class="row" id="products"></div>
+              </div>
+            </div>
+
+            <!-- Panier -->
+            <div class="col-lg-4">
+              <div class="cart-box shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="m-0 fw-bold"><i class="bi bi-cart3"></i> Panier</h5>
+                  <button class="btn btn-sm text-danger fw-bold" onclick="clearCart()">Vider</button>
+                </div>
+                <div class="table-responsive-custom">
+                  <table class="table align-middle table-borderless">
+                    <thead>
+                      <tr class="border-bottom text-muted" style="font-size:0.9rem">
+                        <th>Produit</th>
+                        <th class="text-center">Qté</th>
+                        <th class="text-end">Total</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="cart"></tbody>
+                  </table>
+                </div>
+                <div class="mt-auto border-top pt-3">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Sous-total</span>
+                    <span id="subtotal" class="fw-bold">0 DH</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Taxe (10%)</span>
+                    <span id="tax" class="text-muted">0 DH</span>
+                  </div>
+                  <hr class="my-2">
+                  <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    Total <span id="total" class="total fw-bold fs-3">0 DH</span>
+                  </h4>
+                  <button
+                    class="btn btn-success w-100 py-2 fw-bold mb-2 d-flex align-items-center justify-content-center gap-2"
+                    onclick="payCash()">
+                    <i class="bi bi-cash-coin fs-5"></i> Paiement Cash
+                  </button>
+                  <button
+                    class="btn btn-primary w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
+                    onclick="payCarte()">
+                    <i class="bi bi-credit-card fs-5"></i> Paiement Carte
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========  GESTION PRODUITS ========== -->
+        <div id="page-produits" style="display:none;">
+
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold m-0">Gestion des Produits</h4>
+            <button class="btn btn-purple px-4" onclick="ouvrirForm()">
+              <i class="bi bi-plus-lg me-1"></i> Ajouter Produit
+            </button>
+          </div>
+
+
+          <div class="card p-4 mb-4 border-0 shadow-sm rounded-4" id="product-form-box" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold m-0" id="form-title">Ajouter un Produit</h5>
+              <button class="btn btn-sm btn-outline-secondary" onclick="fermerForm()">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+
+
+            <input type="hidden" id="edit-index" value="-1">
+
+            <div class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">Nom du produit</label>
+                <input type="text" id="prod-name" class="form-control" placeholder="Ex: Tajine Poulet">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-semibold">Prix (DH)</label>
+                <input type="number" id="prod-price" class="form-control" placeholder="Ex: 35">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-semibold">Catégorie</label>
+                <select id="prod-category" class="form-select">
+                  <option value="drink">Boisson</option>
+                  <option value="food">Snack</option>
+                  <option value="desserts">Dessert</option>
+                  <option value="plats">Plat</option>
+                  <option value="cafes">Café</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">URL Image</label>
+                <input type="text" id="prod-img" class="form-control" placeholder="https://...">
+              </div>
+              <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-purple w-100" onclick="saveProduit()">
+                  <i class="bi bi-check-lg me-1"></i> Enregistrer
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tableau des produits -->
+          <div class="card border-0 shadow-sm rounded-4 p-3">
+            <h5 class="fw-bold mb-3">Liste des Produits — <span id="count-produits">0</span> produit(s)</h5>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>Catégorie</th>
+                    <th>Prix</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="produits-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="javascript.js"></script>
+</body>
+
+</html>
